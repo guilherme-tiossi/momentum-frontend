@@ -4,7 +4,7 @@
       <div class="row g-0">
         <div class="col-md-6 d-flex flex-column align-items-center text-center p-4">
           <div class="custom-img rounded"></div>
-          <p class="mt-3 custom-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p class="mt-3 custom-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, porta sed turpis. Duis vel leo vel est pretium tempus.</p>
         </div>
         
         <div class="col-md-1 d-flex align-items-center">
@@ -17,7 +17,7 @@
           <button class="btn w-100 mb-2 custom-button" @click="login">Login</button>
           <div class="custom-hr mb-3"></div>
           <button class="btn btn-link custom-button-clear mb-2">Forgot password?</button>
-          <button class="btn w-100 custom-button">Create new account</button>
+          <button class="btn w-100 custom-button" @click="$router.push('/registration')">Create new account</button>
         </div>
       </div>
     </div>
@@ -31,7 +31,7 @@ const email = ref("");
 const password = ref("");
 
 const login = () => {
-  console.log("Logando com:", email.value, password.value);
+  // link to api
 };
 </script>
 
@@ -51,7 +51,7 @@ const login = () => {
 .custom-paragraph {
   font-family: 'Inter', sans-serif;
   font-size: 1.1rem;
-  text-align: center;
+  text-align: left;
 }
 
 .custom-divider {
@@ -87,6 +87,10 @@ const login = () => {
   font-family: 'Inter', sans-serif;
   font-weight: bold;
   color: black;
+}
+
+.custom-button:hover {
+  background-color: #b7b7b7 !important;
 }
 
 .custom-button-clear {
