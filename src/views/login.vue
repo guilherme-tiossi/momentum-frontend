@@ -26,12 +26,26 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { getAuthStore } from "../stores/auth";
+
+const router = useRouter();
+const authStore = getAuthStore();
 
 const email = ref("");
 const password = ref("");
 
-const login = () => {
-  // link to api
+const login = async () => {
+    try {
+        await authStore.login({
+            email: email.value,
+            password: password.value
+        });
+    } catch (error) {
+        console.error("Login failed:", error);
+        alert("Login failed. Please check your details: " + 
+            (error.response?.data?.message || error.message));
+    }
 };
 </script>
 

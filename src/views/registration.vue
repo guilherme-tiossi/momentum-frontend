@@ -35,24 +35,29 @@
     </div>
   </template>
   
-<script setup>
-    import { ref } from "vue";
-    import axios from "axios";
-    const name = ref("");
-    const username = ref("");
-    const email = ref("");
-    const password = ref("");
-    const confirm_password = ref("");
-    const register = async () => {
-
-    if (password.value !== confirm_password.value) {
-      alert("Passwords do not match!");
-      return;
-    }
-
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/api/create-user", {
-        data: {
+  <script setup>
+  import { ref } from "vue";
+  import { useRouter } from "vue-router";
+  import { getAuthStore } from "../stores/auth";
+  
+  const router = useRouter();
+  const authStore = getAuthStore();
+  
+  const name = ref("");
+  const username = ref("");
+  const email = ref("");
+  const password = ref("");
+  const confirm_password = ref("");
+  
+  const register = async () => {
+      if (password.value !== confirm_password.value) {
+          alert("Passwords do not match!");
+          return;
+      }
+  
+      try {
+          await authStore.register({
+            data: {
             type: "users",
             attributes: {
               name: name.value,
@@ -60,18 +65,18 @@
               email: email.value,
               password: password.value,
             },
-        },
-      });
-      console.log("User registered:", response.data);
-      alert("Registration successful!");
-      // redirect to other page
-      // $router.push('/login');
-    } catch (error) {
-      console.error("Registration failed:", error.response?.data || error);
-      alert("Registration failed. Please check your details.");
-    }
-    };
-</script>
+            },
+          });
+          
+          alert("Registration successful!");
+          router.push('/profile');
+      } catch (error) {
+          console.error("Registration failed:", error);
+          alert("Registration failed. Please check your details: " + 
+              (error.response?.data?.message || error.message));
+      }
+  };
+  </script>
   
   <style scoped>
   .custom-card {
