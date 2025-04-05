@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useAuthStore } from "../stores/auth";
 import router from "../router";
 
 const api = axios.create({
@@ -32,16 +31,19 @@ async function getCsrfToken() {
 
 api.interceptors.response.use(
     response => response,
-    error => {
-        if (error.config && error.config.url.includes("/logout")) {
+    async error => {
+        const originalRequest = error.config;
+
+        if (originalRequest?.url?.includes("/logout")) {
             return Promise.reject(error);
         }
 
-        if (error.response && error.response.status === 401) {
-            const authStore = useAuthStore();
-            authStore.logout().catch(() => { });
-            router.push("/");
+        if (error.response?.status === 401) {
+            this.user = null;
+            this.isAuthenticated = false;
+            router.push('/');
         }
+
         return Promise.reject(error);
     }
 );

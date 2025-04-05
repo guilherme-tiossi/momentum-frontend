@@ -23,16 +23,17 @@ export const useAuthStore = defineStore("auth", {
             }
         },
         async logout() {
+            this.user = null;
+            this.isAuthenticated = false;
             try {
                 await api.post("/logout");
-                this.user = null;
-                this.isAuthenticated = false;
                 router.push('/');
             } catch (error) {
-                console.error("Logout failed:", error);
-                throw error;
+                router.push('/');
+
             }
         },
+
         async fetchUser() {
             try {
                 const response = await api.get("/api/user");
@@ -42,7 +43,10 @@ export const useAuthStore = defineStore("auth", {
             } catch (error) {
                 this.user = null;
                 this.isAuthenticated = false;
-                throw error;
+
+                if (error.response?.status === 401) {
+                    router.push('/');
+                }
             }
         },
         async register(userData) {

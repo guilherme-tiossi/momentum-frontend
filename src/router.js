@@ -5,8 +5,8 @@ import registration from './views/registration.vue';
 import profile from './views/profile.vue';
 
 const routes = [
-    { path: '/', component: login },
-    { path: '/registration', component: registration },
+    { path: '/', component: login, meta: { guestOnly: true } },
+    { path: '/registration', component: registration, meta: { guestOnly: true } },
     { path: '/profile', component: profile, meta: { requiresAuth: true } }
 ];
 
@@ -18,9 +18,20 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const authStore = getAuthStore();
 
-    if (to.meta.requiresAuth && !authStore.user) {
-        await authStore.fetchUser();
-        if (!authStore.user) return next("/");
+    if (!authStore.user) {
+        try {
+            await authStore.fetchUser();
+        } catch (e) {
+            return next('/');
+        }
+    }
+
+    if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+        return next('/');
+    }
+
+    if (to.meta.guestOnly && authStore.isAuthenticated) {
+        return next('/profile');
     }
 
     next();
