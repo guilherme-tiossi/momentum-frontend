@@ -11,9 +11,8 @@ export const useAuthStore = defineStore("auth", {
         async login(credentials) {
             try {
                 const response = await api.post("/login", credentials);
-                this.user = response.data;
+                this.user = response.data.data.attributes;
                 this.isAuthenticated = true;
-                await this.fetchUser();
                 router.push('/profile');
                 return response;
             } catch (error) {
@@ -37,7 +36,7 @@ export const useAuthStore = defineStore("auth", {
         async fetchUser() {
             try {
                 const response = await api.get("/api/user");
-                this.user = response.data;
+                this.user = response.data.data.attributes;
                 this.isAuthenticated = true;
                 return response;
             } catch (error) {

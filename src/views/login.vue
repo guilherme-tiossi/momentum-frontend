@@ -78,7 +78,7 @@ const login = async () => {
   height: 1.3px;
   background: #676767;
   width: 100%;
-  opacity: 1; /* Sobrescreve o estilo do Bootstrap */
+  opacity: 1;
 }
 
 .custom-input {
@@ -116,7 +116,6 @@ const login = async () => {
   padding: 0;
 }
 
-/* Sobrescreve o hover do Bootstrap */
 .custom-button-clear:hover {
   color: #676767 !important;
   text-decoration: underline !important;
