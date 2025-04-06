@@ -84,8 +84,8 @@ const vClickOutside = {
 }
 
 .main-button {
-  z-index: 2; /* garante que esteja acima */
-  position: relative; /* necessário para z-index funcionar corretamente */
+  z-index: 2;
+  position: relative;
 }
 
 .plus-icon {
