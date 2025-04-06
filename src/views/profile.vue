@@ -12,18 +12,30 @@
       <div class="profile-info-container position-relative px-4 pb-4">
         <div class="profile-avatar"></div>
         <div class="profile-buttons d-flex flex-row gap-2 justify-content-end">
-          <button class="btn custom-button">Edit profile</button>
+          <button class="custom-button">Edit profile</button>
           <div style="width:20px;"></div>
-          <button class="btn custom-button" @click="logout">Logout</button>
+          <button class="custom-button" @click="logout">Logout</button>
         </div>
         <div class="user-data">
           <h4 class="mb-1 custom-text">{{ authStore.user.name ?? 'Name' }}</h4>
           <div class="row">
-            <p class="col-md-7 text-muted custom-username">@{{ authStore.user.username ?? 'username' }}</p>
+            <p class="mb-1 col-md-7 text-muted custom-minor-text">@{{ authStore.user.username ?? 'username' }}</p>
             <div class="col-md-5 d-flex flex-row gap-2 justify-content-end">
               <p class="mb-1 custom-description">{{ authStore.user.following ?? 0 }} Following</p>
               <div class="col-md-2"></div>
               <p class="mb-1 custom-description">{{ authStore.user.followers ?? 0 }} Followers</p>
+            </div>
+          </div>
+          <div class="col-md-5 d-flex flex-row gap-2">
+          <p v-if="authStore.user.bio" class="mb-1 custom-description">
+            {{ authStore.user.bio }}
+          </p>
+          </div>
+          <div class="row">
+            <div class="col-md-5 d-flex flex-row gap-2">
+              <p class="text-muted custom-minor-text"><i class="bi bi-geo-alt"></i> Location </p>
+              <div class="col-md-1"></div>
+              <p class="text-muted custom-minor-text" style="padding-right:6px;"> <i class="bi bi-calendar-event" style="padding-right:6px;"></i> Joined {{ authStore.user.created_at ?? 0 }}</p>
             </div>
           </div>
         </div>
@@ -86,7 +98,7 @@
   font-size: 20px;
 }
 
-.custom-username {
+.custom-minor-text {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 20px;
@@ -99,8 +111,9 @@
   height: 40px;
   width: 150px;
   font-family: 'Inter', sans-serif;
-  font-weight: 500;
+  font-weight: 450;
   color: black;
+  font-size: 20px;
 }
 
 .custom-button:hover {
