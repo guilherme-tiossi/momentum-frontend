@@ -12,20 +12,20 @@
       <div class="profile-info-container position-relative px-4 pb-4">
         <div class="profile-avatar"></div>
         <div class="profile-buttons d-flex flex-row gap-2 justify-content-end">
-          <button class="">Edit profile</button>
-          <button class="" @click="logout">logout</button>
+          <button class="btn custom-button">Edit profile</button>
+          <div style="width:20px;"></div>
+          <button class="btn custom-button" @click="logout">Logout</button>
         </div>
         <div class="user-data">
-          <h4 class="mb-1">{{ authStore.user.name ?? 'Name' }}</h4>
+          <h4 class="mb-1 custom-text">{{ authStore.user.name ?? 'Name' }}</h4>
           <div class="row">
-            <p class="col-md-9 text-muted">@{{ authStore.user.username ?? 'username' }}</p>
-            <div class="col-md-3 d-flex flex-row gap-2 justify-content-end">
-              <p class="text-muted">{{ authStore.user.following ?? 0 }} following</p>
-              <p class="text-muted">{{ authStore.user.followers ?? 0 }} followers</p>
+            <p class="col-md-7 text-muted custom-username">@{{ authStore.user.username ?? 'username' }}</p>
+            <div class="col-md-5 d-flex flex-row gap-2 justify-content-end">
+              <p class="mb-1 custom-description">{{ authStore.user.following ?? 0 }} Following</p>
+              <div class="col-md-2"></div>
+              <p class="mb-1 custom-description">{{ authStore.user.followers ?? 0 }} Followers</p>
             </div>
           </div>
-          <!-- <div class="d-flex gap-3">
-          </div> -->
         </div>
       </div>
     </div>
@@ -39,8 +39,10 @@
 
 <style scoped>
 .sidebar {
+  z-index: 2;
   width: 220px;
   min-width: 220px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .main-content {
@@ -73,6 +75,36 @@
   padding-top:35px;
   padding-left:35px;
   padding-right:35px;
+}
+
+.custom-text {
+  font-family: 'Inter', sans-serif;
+}
+
+.custom-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+}
+
+.custom-username {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.custom-button {
+  background-color: #d9d9d9 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  height: 40px;
+  width: 150px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: black;
+}
+
+.custom-button:hover {
+  background-color: #c2c2c2 !important;
 }
 
 </style>
