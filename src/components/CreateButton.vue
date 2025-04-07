@@ -128,10 +128,9 @@ const vClickOutside = {
   height: 55px;
   font-size: 26px;
   color: #fff;
-  opacity: 0.9;
   transition: transform 0.4s ease, opacity 0.4s ease;
   margin-bottom: 10px;
-  margin-left: 2.5px;
+  margin-left: 5px;
 }
 
 .fade-up-enter-active,

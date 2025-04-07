@@ -1,9 +1,13 @@
 <template>
+  <EditProfileModal :show="isEditing" @close="isEditing = false" />
+
   <div class="profile-cover w-100"></div>
   <div class="profile-info-container position-relative px-4 pb-4">
     <div class="profile-avatar"></div>
     <div class="profile-buttons d-flex flex-row gap-2 justify-content-end">
-      <button class="custom-button">Edit profile</button>
+      <button class="custom-button" @click="isEditing = true">
+        Edit profile
+      </button>
       <div style="width: 20px"></div>
       <button class="custom-button" @click="logout">Logout</button>
     </div>
@@ -103,12 +107,24 @@
 .custom-button:hover {
   background-color: #c2c2c2 !important;
 }
+
+.btn-close {
+  background: red;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+}
 </style>
 
 <script setup>
+import { ref } from "vue";
 import { getAuthStore } from "../stores/auth";
+import EditProfileModal from "./EditProfileModal.vue";
 
 const authStore = getAuthStore();
+const isEditing = ref(false);
 
 const logout = async () => {
   try {
