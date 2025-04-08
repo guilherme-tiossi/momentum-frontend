@@ -34,11 +34,14 @@
       </div>
       <div class="row">
         <div class="col-md-5 d-flex flex-row gap-2">
-          <p class="text-muted custom-minor-text">
-            <i class="bi bi-geo-alt"></i> Location
+          <p
+            v-if="authStore.user.location"
+            class="text-muted custom-minor-text"
+          >
+            <i class="bi bi-geo-alt"></i> {{ authStore.user.location }}
           </p>
-          <div class="col-md-1"></div>
-          <p class="text-muted custom-minor-text" style="padding-right: 6px">
+          <div v-if="authStore.user.location" class="col-md-1"></div>
+          <p class="text-muted custom-minor-text">
             <i class="bi bi-calendar-event" style="padding-right: 6px"></i>
             Joined {{ authStore.user.created_at ?? 0 }}
           </p>

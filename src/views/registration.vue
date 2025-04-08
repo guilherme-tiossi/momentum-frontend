@@ -195,7 +195,6 @@ const register = async () => {
   padding: 0;
 }
 
-/* Sobrescreve o hover do Bootstrap */
 .custom-button-clear:hover {
   color: #676767 !important;
   text-decoration: underline !important;

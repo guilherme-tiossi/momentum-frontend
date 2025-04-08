@@ -33,13 +33,20 @@
               v-model="email"
             />
 
+            <input
+              type="text"
+              class="form-control mb-3 custom-input"
+              placeholder="Location"
+              v-model="location"
+            />
+
             <textarea
               class="form-control mb-3 custom-textarea"
               placeholder="Bio"
-              v-model="password"
+              v-model="bio"
             ></textarea>
 
-            <button class="btn w-100 mb-2 custom-button" @click="register">
+            <button class="btn w-100 mb-2 custom-button" @click="edit">
               Save
             </button>
           </div>
@@ -50,23 +57,51 @@
 </template>
 
 <script setup>
+import { getAuthStore } from "../stores/auth";
 import { defineProps, defineEmits, ref } from "vue";
+import api from "../api/http";
 
+const authStore = getAuthStore();
 const props = defineProps({ show: Boolean });
 const emit = defineEmits(["close"]);
 
 const name = ref("");
 const username = ref("");
 const email = ref("");
-const password = ref("");
+const location = ref("");
+const bio = ref("");
 
-const register = () => {
-  console.log({
-    name: name.value,
-    username: username.value,
-    email: email.value,
-    password: password.value,
-  });
+name.value = authStore.user.name;
+username.value = authStore.user.username;
+email.value = authStore.user.email;
+location.value = authStore.user.location;
+bio.value = authStore.user.bio;
+
+const edit = async () => {
+  const userData = {
+    data: {
+      type: "users",
+      attributes: {
+        name: name.value,
+        username: username.value,
+        email: email.value,
+        bio: bio.value,
+        location: location.value,
+      },
+    },
+  };
+
+  const userId = authStore.user.id;
+
+  try {
+    const response = await api.patch("/api/users/" + userId, userData);
+    authStore.user = response.data.data.attributes;
+    authStore.user.id = userId;
+    emit("close");
+  } catch (error) {
+    console.error("Edit failed:", error);
+    emit("close");
+  }
 };
 
 const handleClickOutside = () => {
