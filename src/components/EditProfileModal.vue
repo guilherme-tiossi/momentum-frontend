@@ -78,16 +78,19 @@ location.value = authStore.user.location;
 bio.value = authStore.user.bio;
 
 const edit = async () => {
+  const attributes = {
+    name: name.value,
+    username: username.value,
+    email: email.value,
+  };
+
+  if (bio.value) attributes.bio = bio.value;
+  if (location.value) attributes.location = location.value;
+
   const userData = {
     data: {
       type: "users",
-      attributes: {
-        name: name.value,
-        username: username.value,
-        email: email.value,
-        bio: bio.value,
-        location: location.value,
-      },
+      attributes,
     },
   };
 

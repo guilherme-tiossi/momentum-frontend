@@ -12,6 +12,7 @@ export const useAuthStore = defineStore("auth", {
       try {
         const response = await api.post("/login", credentials);
         this.user = response.data.data.attributes;
+        this.user.id = response.data.data.id;
         this.isAuthenticated = true;
         router.push("/profile");
         return response;
