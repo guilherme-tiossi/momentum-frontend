@@ -27,7 +27,7 @@
           </p>
         </div>
       </div>
-      <div class="col-md-5 d-flex flex-row gap-2">
+      <div class="col-md-10 d-flex flex-row gap-2">
         <p v-if="authStore.user.bio" class="mb-1 custom-description">
           {{ authStore.user.bio }}
         </p>
@@ -47,13 +47,24 @@
           </p>
         </div>
       </div>
+      <div class="row" style="margin-top: 10px">
+        <div class="col-md-4 d-flex flex-row gap-2">
+          <GrowthCard title="Streak"></GrowthCard>
+        </div>
+        <div class="col-md-4 d-flex flex-row gap-2">
+          <GrowthCard title="Weekly"></GrowthCard>
+        </div>
+        <div class="col-md-4 d-flex flex-row gap-2">
+          <GrowthCard title="Daily Tasks"></GrowthCard>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .profile-cover {
-  height: 200px;
+  height: 175px;
   background: #dbdbdb;
 }
 
@@ -86,13 +97,13 @@
 
 .custom-description {
   font-family: "Inter", sans-serif;
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .custom-minor-text {
   font-family: "Inter", sans-serif;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 19px;
 }
 
 .custom-button {
@@ -125,6 +136,7 @@
 import { ref } from "vue";
 import { getAuthStore } from "../stores/auth";
 import EditProfileModal from "./EditProfileModal.vue";
+import GrowthCard from "./GrowthCard.vue";
 
 const authStore = getAuthStore();
 const isEditing = ref(false);
