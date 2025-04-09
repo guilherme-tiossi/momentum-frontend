@@ -79,11 +79,16 @@ const vClickOutside = {
 }
 
 .button:hover {
-  background-color: #a7a7a7 !important;
+  background: radial-gradient(
+    ellipse 70% 75% at center,
+    #c1c1c1,
+    #8d8d8d
+  ) !important;
   color: #e6e6e6;
 }
 
 .main-button {
+  background: radial-gradient(ellipse 70% 75% at center, #cdcdcd, #a2a2a2);
   z-index: 2;
   position: relative;
 }
@@ -124,6 +129,7 @@ const vClickOutside = {
 }
 
 .small-button {
+  background: radial-gradient(ellipse 70% 75% at center, #cfcfcf, #b1b1b1);
   width: 55px;
   height: 55px;
   font-size: 26px;
@@ -131,6 +137,15 @@ const vClickOutside = {
   transition: transform 0.4s ease, opacity 0.4s ease;
   margin-bottom: 10px;
   margin-left: 5px;
+}
+
+.small-button:hover {
+  color: #fff;
+  background: radial-gradient(
+    ellipse 70% 75% at center,
+    #bfbfbf,
+    #9e9e9e
+  ) !important;
 }
 
 .fade-up-enter-active,

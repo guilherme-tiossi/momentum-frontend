@@ -116,10 +116,11 @@
   font-weight: 450;
   color: black;
   font-size: 20px;
+  background: linear-gradient(to top, #c1c1c1, #d9d9d9);
 }
 
 .custom-button:hover {
-  background-color: #c2c2c2 !important;
+  background: linear-gradient(to top, #b3b3b3, #cdcdcd);
 }
 
 .btn-close {
