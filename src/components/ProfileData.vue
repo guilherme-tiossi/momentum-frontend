@@ -49,13 +49,28 @@
       </div>
       <div class="row" style="margin-top: 10px">
         <div class="col-md-4 d-flex flex-row gap-2">
-          <GrowthCard title="Streak"></GrowthCard>
+          <GrowthCard title="Streak">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-fire"></i>
+              <p class="growth-description mb-0">
+                {{ authStore.user.streak ?? 0 }}
+              </p>
+            </div>
+          </GrowthCard>
         </div>
         <div class="col-md-4 d-flex flex-row gap-2">
-          <GrowthCard title="Weekly"></GrowthCard>
+          <GrowthCard title="Weekly Tasks">
+            <p class="growth-description">
+              {{ weeklyTaskData.finished }} / {{ weeklyTaskData.total }}
+            </p>
+          </GrowthCard>
         </div>
         <div class="col-md-4 d-flex flex-row gap-2">
-          <GrowthCard title="Daily Tasks"></GrowthCard>
+          <GrowthCard title="Daily Tasks">
+            <p class="growth-description">
+              {{ dailyTaskData.finished }} / {{ dailyTaskData.total }}
+            </p>
+          </GrowthCard>
         </div>
       </div>
     </div>
@@ -100,6 +115,13 @@
   font-size: 19px;
 }
 
+.growth-description {
+  font-family: "Inter", sans-serif;
+  font-weight: 450;
+  color: black;
+  font-size: 20px;
+}
+
 .custom-minor-text {
   font-family: "Inter", sans-serif;
   font-weight: 500;
@@ -134,13 +156,31 @@
 </style>
 
 <script setup>
-import { ref } from "vue";
+import api from "../api/http";
+import { ref, onMounted } from "vue";
+import GrowthCard from "./GrowthCard.vue";
 import { getAuthStore } from "../stores/auth";
 import EditProfileModal from "./EditProfileModal.vue";
-import GrowthCard from "./GrowthCard.vue";
 
 const authStore = getAuthStore();
 const isEditing = ref(false);
+
+const weeklyTaskData = ref({ finished: 0, total: 0 });
+const dailyTaskData = ref({ finished: 0, total: 0 });
+
+onMounted(() => {
+  fetchTaskReport();
+});
+
+const fetchTaskReport = async () => {
+  try {
+    const { data } = await api.get("/api/taskReport");
+    dailyTaskData.value = data.data.daily;
+    weeklyTaskData.value = data.data.weekly;
+  } catch (err) {
+    console.error("Erro ao buscar relatório de tarefas:", err);
+  }
+};
 
 const logout = async () => {
   try {

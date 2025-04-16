@@ -54,6 +54,9 @@ export default {
 
 .card-content {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 1rem;
   text-align: center;
 }

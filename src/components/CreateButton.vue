@@ -82,13 +82,13 @@ const vClickOutside = {
   background: radial-gradient(
     ellipse 70% 75% at center,
     #c1c1c1,
-    #8d8d8d
+    #9c9c9c
   ) !important;
   color: #e6e6e6;
 }
 
 .main-button {
-  background: radial-gradient(ellipse 70% 75% at center, #cdcdcd, #a2a2a2);
+  background: radial-gradient(ellipse 70% 75% at center, #cdcdcd, #a7a7a7);
   z-index: 2;
   position: relative;
 }
