@@ -1,10 +1,14 @@
 <template>
+  <CreateTaskModal :show="isCreatingTask" @close="isCreatingTask = false" />
+
   <div class="fab-container" v-click-outside="closeIfOpen">
     <transition-group name="fade-up" tag="div" class="fab-items">
       <div v-if="isOpen" class="fab-item" key="item1">
         <div class="fab-inner">
           <div class="label">New Task</div>
-          <button class="button small-button">>:)</button>
+          <button class="button small-button" @click="isCreatingTask = true">
+            >:)
+          </button>
         </div>
       </div>
       <div v-if="isOpen" class="fab-item" key="item2">
@@ -32,8 +36,12 @@
 
 <script setup>
 import { ref } from "vue";
+import CreateTaskModal from "./CreateTaskModal.vue";
 
 const isOpen = ref(false);
+const isCreatingTask = ref(false);
+// const isCreatingRecurrentTask = ref(false);
+// const isCreatingPost = ref(false);
 const toggle = () => (isOpen.value = !isOpen.value);
 
 const closeIfOpen = () => {
