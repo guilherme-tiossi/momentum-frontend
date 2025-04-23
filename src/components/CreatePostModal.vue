@@ -5,37 +5,31 @@
         <div class="close-button-wrapper">
           <button class="close-button" @click="$emit('close')">x</button>
         </div>
-        <h4>New Task</h4>
+        <h4>New Post</h4>
         <div class="row g-0">
           <div class="col-md-12 d-flex flex-column justify-content-center p-4">
-            <div class="row">
-              <div class="col-md-6">
+            <textarea
+              class="form-control mb-3 custom-textarea"
+              placeholder="What's on your mind?"
+              v-model="text"
+            ></textarea>
+            <div class="row justify-content-center mb-3">
+              <div class="col-8 text-center">
                 <input
-                  type="text"
-                  class="form-control mb-3 custom-input"
-                  placeholder="Task"
-                  v-model="task"
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  style="display: none"
+                  @change="handleFileUpload"
                 />
-              </div>
-              <div class="col-md-6">
-                <input
-                  type="text"
-                  class="form-control mb-3 custom-input"
-                  placeholder="MM/DD/YYYY"
-                  v-model="date"
-                  @input="onDateInput"
-                  @keydown="onDateKeyDown"
-                  maxlength="10"
-                />
+                <button
+                  class="btn w-100 custom-button"
+                  @click="triggerFileInput"
+                >
+                  {{ image?.name || "Upload Image" }}
+                </button>
               </div>
             </div>
-
-            <input
-              type="text"
-              class="form-control mb-3 custom-input"
-              placeholder="Description"
-              v-model="description"
-            />
 
             <button class="btn w-100 mb-2 custom-button" @click="create">
               Save
@@ -49,107 +43,51 @@
 
 <script setup>
 import api from "../api/http";
-import { nextTick } from "vue";
 import { defineProps, defineEmits, ref } from "vue";
 
 const props = defineProps({ show: Boolean });
 const emit = defineEmits(["close"]);
 
-const task = ref("");
-const description = ref("");
-const date = ref("");
+const text = ref("");
+const image = ref(null);
+const fileInput = ref(null);
 
-let _prevValue = "";
-let _prevCursor = 0;
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
 
 const handleClickOutside = () => {
   emit("close");
 };
 
-const isValidDate = (mm, dd, yyyy) => {
-  const month = parseInt(mm);
-  const day = parseInt(dd);
-  const year = parseInt(yyyy);
-
-  if (isNaN(month) || isNaN(day) || isNaN(year)) return false;
-  if (month < 1 || month > 12) return false;
-
-  const daysInMonth = new Date(year, month, 0).getDate();
-  return day >= 1 && day <= daysInMonth;
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    image.value = file;
+  }
 };
 
 const create = async () => {
-  const parts = date.value.split("/");
+  const formData = new FormData();
 
-  if (parts.length !== 3) {
-    alert("Please enter the date in MM/DD/YYYY format.");
-    return;
+  formData.append("data[type]", "posts");
+  formData.append("data[attributes][text]", text.value);
+
+  if (image.value) {
+    formData.append("data[attributes][attachments][0]", image.value);
   }
-
-  const [mm, dd, yyyy] = parts;
-
-  if (!isValidDate(mm, dd, yyyy)) {
-    alert("Invalid date. Please check the values.");
-    return;
-  }
-
-  const formattedDate = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-
-  const attributes = {
-    title: task.value,
-    description: description.value,
-    date: formattedDate,
-  };
-
-  const taskData = {
-    data: {
-      type: "tasks",
-      attributes,
-    },
-  };
 
   try {
-    await api.post("/api/tasks", taskData);
+    await api.post("/api/posts", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     emit("close");
   } catch (error) {
-    console.error("Task failed:", error);
+    console.error("Post failed:", error);
     emit("close");
   }
-};
-
-const onDateKeyDown = (e) => {
-  _prevValue = date.value;
-  _prevCursor = e.target.selectionStart;
-};
-
-const onDateInput = (e) => {
-  const input = e.target;
-  const raw = input.value;
-  const cursor = input.selectionStart;
-  const type = e.inputType;
-
-  let val = raw.replace(/\D/g, "").slice(0, 8);
-
-  let formatted = "";
-  if (val.length >= 1) formatted += val.substring(0, 2);
-  if (val.length >= 3) formatted += "/" + val.substring(2, 4);
-  if (val.length >= 5) formatted += "/" + val.substring(4, 8);
-
-  date.value = formatted;
-
-  let newPos = cursor;
-  if (type === "deleteContentBackward") {
-    newPos = _prevCursor - 1;
-  } else {
-    const before = (_prevValue.slice(0, _prevCursor).match(/\//g) || []).length;
-    const after = (formatted.slice(0, newPos).match(/\//g) || []).length;
-    newPos = newPos + (after - before);
-  }
-
-  nextTick(() => {
-    newPos = Math.max(0, Math.min(formatted.length, newPos));
-    input.setSelectionRange(newPos, newPos);
-  });
 };
 
 const vClickOutside = {
@@ -238,6 +176,20 @@ defineExpose({});
   font-family: "Inter", sans-serif;
   font-weight: bold;
   color: black;
+}
+
+.custom-textarea {
+  background-color: #d0d0d0 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  height: 80px;
+  font-family: "Inter", sans-serif;
+  resize: none;
+  padding-top: 10px;
+}
+
+.custom-textarea::placeholder {
+  color: #676767;
 }
 
 .custom-button:hover {

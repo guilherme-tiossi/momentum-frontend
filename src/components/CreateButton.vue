@@ -1,5 +1,6 @@
 <template>
   <CreateTaskModal :show="isCreatingTask" @close="isCreatingTask = false" />
+  <CreatePostModal :show="isCreatingPost" @close="isCreatingPost = false" />
 
   <div class="fab-container" v-click-outside="closeIfOpen">
     <transition-group name="fade-up" tag="div" class="fab-items">
@@ -20,7 +21,9 @@
       <div v-if="isOpen" class="fab-item" key="item3">
         <div class="fab-inner">
           <div class="label">New Post</div>
-          <button class="button small-button">:3</button>
+          <button class="button small-button" @click="isCreatingPost = true">
+            :3
+          </button>
         </div>
       </div>
     </transition-group>
@@ -37,11 +40,12 @@
 <script setup>
 import { ref } from "vue";
 import CreateTaskModal from "./CreateTaskModal.vue";
+import CreatePostModal from "./CreatePostModal.vue";
 
 const isOpen = ref(false);
 const isCreatingTask = ref(false);
+const isCreatingPost = ref(false);
 // const isCreatingRecurrentTask = ref(false);
-// const isCreatingPost = ref(false);
 const toggle = () => (isOpen.value = !isOpen.value);
 
 const closeIfOpen = () => {
