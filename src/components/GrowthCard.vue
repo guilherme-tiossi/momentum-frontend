@@ -24,8 +24,8 @@ export default {
 <style scoped>
 .card {
   background: #eeeeee;
-  width: 350px;
-  height: 160px;
+  width: 250px;
+  height: 110px;
   border-radius: 8px 8px 25px 25px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;

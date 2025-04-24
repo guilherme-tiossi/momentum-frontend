@@ -11,7 +11,7 @@
 <style scoped>
 .sidebar {
   z-index: 2;
-  width: 220px;
+  width: 500px;
   min-width: 220px;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.06);
 }

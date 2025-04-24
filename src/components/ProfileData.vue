@@ -27,13 +27,13 @@
           </p>
         </div>
       </div>
-      <div class="col-md-10 d-flex flex-row gap-2">
+      <div class="col-md-10 d-flex flex-row gap-2 mb-1">
         <p v-if="authStore.user.bio" class="mb-1 custom-description">
           {{ authStore.user.bio }}
         </p>
       </div>
       <div class="row">
-        <div class="col-md-5 d-flex flex-row gap-2">
+        <div class="col-md-7 d-flex flex-row gap-2 mb-2">
           <p
             v-if="authStore.user.location"
             class="text-muted custom-minor-text"
@@ -47,7 +47,7 @@
           </p>
         </div>
       </div>
-      <div class="row" style="margin-top: 10px">
+      <div class="row">
         <div class="col-md-4 d-flex flex-row gap-2">
           <GrowthCard title="Streak">
             <div class="d-flex align-items-center justify-content-center gap-2">
@@ -72,6 +72,11 @@
             </p>
           </GrowthCard>
         </div>
+
+        <!-- load posts -->
+        <div class="" style="margin-top: 35px">
+          <PostCard />
+        </div>
       </div>
     </div>
   </div>
@@ -87,8 +92,8 @@
   position: absolute;
   top: -100px;
   left: 60px;
-  width: 150px;
-  height: 150px;
+  width: 135px;
+  height: 135px;
   background: #c7c7c7;
   border-radius: 20px;
 }
@@ -101,7 +106,7 @@
 }
 
 .user-data {
-  padding-top: 35px;
+  padding-top: 25px;
   padding-left: 35px;
   padding-right: 35px;
 }
@@ -159,6 +164,7 @@
 import api from "../api/http";
 import { ref, onMounted } from "vue";
 import GrowthCard from "./GrowthCard.vue";
+import PostCard from "./PostCard.vue";
 import { getAuthStore } from "../stores/auth";
 import EditProfileModal from "./EditProfileModal.vue";
 
