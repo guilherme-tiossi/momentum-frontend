@@ -1,23 +1,53 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card p-5 shadow-lg custom-card" style="max-width: 900px; width: 100%">
+  <div
+    class="container d-flex justify-content-center align-items-center vh-100"
+  >
+    <div
+      class="card p-5 shadow-lg custom-card"
+      style="max-width: 900px; width: 100%"
+    >
       <div class="row g-0">
-        <div class="col-md-6 d-flex flex-column align-items-center text-center p-4">
+        <div
+          class="col-md-6 d-flex flex-column align-items-center text-center p-4"
+        >
           <div class="custom-img rounded"></div>
-          <p class="mt-3 custom-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua, porta sed turpis. Duis vel leo vel est pretium tempus.</p>
+          <p class="mt-3 custom-paragraph">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua, porta
+            sed turpis. Duis vel leo vel est pretium tempus.
+          </p>
         </div>
-        
+
         <div class="col-md-1 d-flex align-items-center">
           <div class="custom-divider"></div>
         </div>
-        
+
         <div class="col-md-5 d-flex flex-column justify-content-center p-4">
-          <input type="email" class="form-control mb-3 custom-input" placeholder="E-mail" v-model="email" />
-          <input type="password" class="form-control mb-3 custom-input" placeholder="Password" v-model="password" />
-          <button class="btn w-100 mb-2 custom-button" @click="login">Login</button>
+          <input
+            type="email"
+            class="form-control mb-3 custom-input"
+            placeholder="E-mail"
+            v-model="email"
+          />
+          <input
+            type="password"
+            class="form-control mb-3 custom-input"
+            placeholder="Password"
+            v-model="password"
+          />
+          <button class="btn w-100 mb-2 custom-button" @click="login">
+            Login
+          </button>
           <div class="custom-hr mb-3"></div>
-          <button class="btn btn-link custom-button-clear mb-2">Forgot password?</button>
-          <button class="btn w-100 custom-button" @click="$router.push('/registration')">Create new account</button>
+          <button class="btn btn-link custom-button-clear mb-2">
+            Forgot password?
+          </button>
+          <button
+            class="btn w-100 custom-button"
+            @click="$router.push('/registration')"
+          >
+            Create new account
+          </button>
         </div>
       </div>
     </div>
@@ -36,16 +66,18 @@ const email = ref("");
 const password = ref("");
 
 const login = async () => {
-    try {
-        await authStore.login({
-            email: email.value,
-            password: password.value
-        });
-    } catch (error) {
-        console.error("Login failed:", error);
-        alert("Login failed. Please check your details: " + 
-            (error.response?.data?.message || error.message));
-    }
+  try {
+    await authStore.login({
+      email: email.value,
+      password: password.value,
+    });
+  } catch (error) {
+    console.error("Login failed:", error);
+    alert(
+      "Login failed. Please check your details: " +
+        (error.response?.data?.message || error.message)
+    );
+  }
 };
 </script>
 
@@ -63,7 +95,7 @@ const login = async () => {
 }
 
 .custom-paragraph {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 1.1rem;
   text-align: left;
 }
@@ -86,7 +118,7 @@ const login = async () => {
   border: none !important;
   border-radius: 10px !important;
   height: 50px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 .custom-input::placeholder {
@@ -98,7 +130,7 @@ const login = async () => {
   border: none !important;
   border-radius: 10px !important;
   height: 50px;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: bold;
   color: black;
 }
@@ -111,7 +143,7 @@ const login = async () => {
   background-color: transparent !important;
   color: #676767 !important;
   text-decoration: none !important;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: bold;
   padding: 0;
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="profile-info-container d-flex px-4 pb-4">
+    <div class="post-info-container d-flex px-4">
       <div class="profile-avatar me-3 mt-2"></div>
       <div class="d-flex flex-column justify-content-center mt-2">
         <div class="identity-row mb-1">
@@ -53,7 +53,7 @@ export default {
     },
     created_at: {
       type: String,
-      default: "12h",
+      default: "00/00/0000",
     },
     likes: {
       type: String,
@@ -65,7 +65,7 @@ export default {
     },
     comments: {
       type: String,
-      default: "7",
+      default: "0",
     },
   },
 };
@@ -74,9 +74,10 @@ export default {
 <style scoped>
 .card {
   padding-top: 15px;
+  margin-top: 25px;
+  left: 35px;
   background: #eeeeee;
-  width: 900px;
-  height: 160px;
+  width: 840px;
   border-radius: 12px 12px 15px 25px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
@@ -93,7 +94,7 @@ export default {
   text-align: center;
 }
 
-.profile-info-container {
+.post-info-container {
   display: flex;
   align-items: flex-start;
 }

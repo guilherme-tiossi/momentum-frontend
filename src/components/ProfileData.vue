@@ -2,7 +2,7 @@
   <EditProfileModal :show="isEditing" @close="isEditing = false" />
 
   <div class="profile-cover w-100"></div>
-  <div class="profile-info-container position-relative px-4 pb-4">
+  <div class="position-relative px-4">
     <div class="profile-avatar"></div>
     <div class="profile-buttons d-flex flex-row gap-2 justify-content-end">
       <button class="custom-button" @click="isEditing = true">
@@ -72,17 +72,23 @@
             </p>
           </GrowthCard>
         </div>
-
-        <!-- load posts -->
-        <div class="" style="margin-top: 35px">
-          <PostCard />
-        </div>
       </div>
     </div>
   </div>
+  <div class="custom-hr mb-3"></div>
 </template>
 
 <style scoped>
+.custom-hr {
+  margin-top: 30px;
+  height: 1px;
+  background: #d5d5d5;
+  width: 200%;
+  opacity: 1;
+  box-shadow: 0 2px 9px rgba(157, 157, 157, 0.2),
+    0 -2px 9px rgba(157, 157, 157, 0.2);
+}
+
 .profile-cover {
   height: 175px;
   background: #dbdbdb;
@@ -96,6 +102,7 @@
   height: 135px;
   background: #c7c7c7;
   border-radius: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .profile-buttons {
@@ -164,7 +171,6 @@
 import api from "../api/http";
 import { ref, onMounted } from "vue";
 import GrowthCard from "./GrowthCard.vue";
-import PostCard from "./PostCard.vue";
 import { getAuthStore } from "../stores/auth";
 import EditProfileModal from "./EditProfileModal.vue";
 

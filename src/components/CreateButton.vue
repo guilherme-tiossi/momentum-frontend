@@ -73,7 +73,7 @@ const vClickOutside = {
 .fab-container {
   z-index: 3;
   position: fixed;
-  right: 335px;
+  right: 300px;
   bottom: 25px;
 }
 
