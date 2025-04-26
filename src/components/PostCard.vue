@@ -1,6 +1,12 @@
 <template>
-  <div class="card">
-    <div class="post-info-container d-flex px-4">
+  <div class="card" :class="{ 'unreposted-padding': !reposted }">
+    <div v-if="reposted" class="card-tab">
+      <span class="card-tab-text"> Reposted</span>
+    </div>
+    <div
+      class="post-info-container d-flex px-4"
+      :class="{ 'reposted-padding': reposted }"
+    >
       <div class="profile-avatar me-3 mt-2"></div>
       <div class="d-flex flex-column justify-content-center mt-2">
         <div class="identity-row mb-1">
@@ -67,13 +73,16 @@ export default {
       type: String,
       default: "0",
     },
+    reposted: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
 
 <style scoped>
 .card {
-  padding-top: 15px;
   margin-top: 25px;
   left: 35px;
   background: #eeeeee;
@@ -84,6 +93,32 @@ export default {
   display: flex;
   flex-direction: column;
   background: linear-gradient(to top, #e5e5e5, #eeeeee);
+}
+
+.reposted-padding {
+  padding-top: 10px;
+}
+
+.unreposted-padding {
+  padding-top: 15px;
+}
+
+.card-tab {
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  border-bottom: 2px solid #b3b3b3;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background: linear-gradient(to top, #c9c9c9, #dedede);
+}
+
+.card-tab-text {
+  font-family: "Inter", sans-serif;
+  color: #232323;
+  font-weight: 500;
+  font-size: 17.5px;
 }
 
 .card-content {

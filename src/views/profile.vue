@@ -15,9 +15,10 @@
             :likes="post.attributes.likes"
             :reposts="post.attributes.reposts"
             :created_at="formatDate(post.attributes.created_at)"
-            :name="authStore.user.name"
-            :username="authStore.user.username"
-            :pfp="userPfp"
+            :name="post.user.name"
+            :username="post.user.username"
+            :pfp="post.user.pfp"
+            :reposted="post.attributes.reposted"
           />
         </div>
       </div>
@@ -52,7 +53,36 @@ onMounted(async () => {
     const { data } = await api.get(
       "/api/users/" + authStore.user.id + "/profile_posts"
     );
+
     posts.value = data.data;
+    const postsData = data.data;
+    const included = data.included;
+
+    const usersMap = {};
+    const pfpPath = (user) =>
+      user.attributes.uses_default_pfp
+        ? "/default/pfp.png"
+        : "/storage/avatars/" + user.attributes.pfp;
+
+    included.forEach((item) => {
+      if (item.type === "users") {
+        usersMap[item.id] = {
+          name: item.attributes.name,
+          username: item.attributes.username,
+          pfp: pfpPath(item),
+        };
+      }
+    });
+
+    posts.value = postsData.map((post) => {
+      const userId = post.relationships.user.data.id;
+      const userInfo = usersMap[userId] || {};
+
+      return {
+        ...post,
+        user: userInfo,
+      };
+    });
   } catch (error) {
     console.error("Error loading posts:", error);
   }
