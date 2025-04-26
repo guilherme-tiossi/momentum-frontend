@@ -110,6 +110,7 @@ const create = async () => {
 
   try {
     await api.post("/api/tasks", taskData);
+    emit("created_task");
     emit("close");
   } catch (error) {
     console.error("Task failed:", error);

@@ -83,6 +83,7 @@ const create = async () => {
         "Content-Type": "multipart/form-data",
       },
     });
+    emit("created_post");
     emit("close");
   } catch (error) {
     console.error("Post failed:", error);

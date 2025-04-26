@@ -4,9 +4,22 @@
       <SidebarLeft />
 
       <div class="flex-grow-1 overflow-auto main-content">
-        <CreateButton />
+        <CreatePostModal
+          :show="isCreatingPost"
+          @close="isCreatingPost = false"
+          @created_post="loadPosts"
+        />
+        <CreateTaskModal
+          :show="isCreatingTask"
+          @close="isCreatingTask = false"
+        />
+
+        <CreateButton
+          @open-post="isCreatingPost = true"
+          @open-task="isCreatingTask = true"
+        />
         <ProfileData />
-        <!-- load posts -->
+
         <div class="position-relative px-4 pb-4">
           <PostCard
             v-for="post in posts"
@@ -43,18 +56,23 @@ import ProfileData from "../components/ProfileData.vue";
 import SidebarLeft from "../components/SidebarLeft.vue";
 import CreateButton from "../components/CreateButton.vue";
 import SidebarRight from "../components/SidebarRight.vue";
+import CreatePostModal from "../components/CreatePostModal.vue";
+import CreateTaskModal from "../components/CreateTaskModal.vue";
 
 const posts = ref([]);
 const authStore = getAuthStore();
 const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString();
 
-onMounted(async () => {
+const isCreatingPost = ref(false);
+const isCreatingTask = ref(false);
+// const isCreatingRecurrentTask = ref(false);
+
+const loadPosts = async () => {
   try {
     const { data } = await api.get(
       "/api/users/" + authStore.user.id + "/profile_posts"
     );
 
-    posts.value = data.data;
     const postsData = data.data;
     const included = data.included;
 
@@ -86,5 +104,7 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error loading posts:", error);
   }
-});
+};
+
+onMounted(loadPosts);
 </script>
