@@ -32,6 +32,8 @@
             :username="post.user.username"
             :pfp="post.user.pfp"
             :reposted="post.attributes.reposted"
+            :liked_by_user="post.attributes.liked_by_user"
+            :reposted_by_user="post.attributes.reposted_by_user"
           />
         </div>
       </div>

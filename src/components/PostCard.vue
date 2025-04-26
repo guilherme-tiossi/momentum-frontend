@@ -19,10 +19,22 @@
         </div>
         <div class="engagement-row mt-3">
           <span class="engagement-item">
-            <i class="bi bi-heart"></i> {{ likes }}
+            <i
+              :class="[
+                liked_by_user ? 'bi bi-heart-fill liked' : 'bi bi-heart',
+              ]"
+            ></i>
+            {{ likes }}
           </span>
           <span class="engagement-item">
-            <i class="bi bi-arrow-repeat"></i> {{ reposts }}
+            <i
+              :class="
+                reposted_by_user
+                  ? 'bi bi-arrow-repeat reposted'
+                  : 'bi bi-arrow-repeat'
+              "
+            ></i>
+            {{ reposts }}
           </span>
           <span class="engagement-item">
             <i class="bi bi-chat"></i> {{ comments }}
@@ -77,6 +89,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    reposted_by_user: {
+      type: Boolean,
+      default: false,
+    },
+    liked_by_user: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>
@@ -104,21 +124,21 @@ export default {
 }
 
 .card-tab {
-  height: 2.25rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   padding-left: 20px;
-  border-bottom: 2px solid #b3b3b3;
+  border-bottom: 1px solid #c9c9c9;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  background: linear-gradient(to top, #c9c9c9, #dedede);
+  background: linear-gradient(to top, #d8d8d8, #e6e6e6);
 }
 
 .card-tab-text {
   font-family: "Inter", sans-serif;
-  color: #232323;
-  font-weight: 500;
-  font-size: 17.5px;
+  color: #6b6b6b;
+  font-weight: 450;
+  font-size: 16.5px;
 }
 
 .card-content {
@@ -190,7 +210,24 @@ export default {
 }
 
 .engagement-item i {
+  font-size: 1.2em;
+}
+
+.engagement-item i.bi-arrow-repeat {
+  font-size: 1.3em;
+}
+
+.engagement-item i.reposted {
   text-shadow: 0 0 1px #000;
-  font-size: 1.1em;
+  font-size: 1.3e;
+}
+
+.liked {
+  color: rgb(29, 145, 166);
+}
+
+.reposted {
+  color: rgb(29, 145, 166);
+  text-shadow: 0 0 100px #000;
 }
 </style>
