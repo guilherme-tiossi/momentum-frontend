@@ -119,7 +119,7 @@ export default {
   },
   methods: {
     async repost() {
-      if (!this.reposted_by_user) {
+      if (!this.reposted_by_user_internal) {
         const data = {
           data: {
             type: "reposts",
@@ -142,10 +142,20 @@ export default {
         } catch (error) {
           console.error("Repost failed:", error);
         }
+      } else {
+        try {
+          await api.patch("/api/depost", { post: this.id });
+          this.reposted_internal = false;
+          this.reposted_by_user_internal = false;
+          this.reposts_internal -= 1;
+          this.$emit("deposted");
+        } catch (error) {
+          console.error("Depost failed:", error);
+        }
       }
     },
     async like() {
-      if (!this.liked_by_user) {
+      if (!this.liked_by_user_internal) {
         const data = {
           data: {
             type: "likes",
@@ -167,6 +177,16 @@ export default {
           this.$emit("liked");
         } catch (error) {
           console.error("Like failed:", error);
+        }
+      } else {
+        try {
+          await api.patch("/api/unlike", { post: this.id });
+          this.liked_internal = false;
+          this.liked_by_user_internal = false;
+          this.likes_internal -= 1;
+          this.$emit("unliked");
+        } catch (error) {
+          console.error("Unliked failed:", error);
         }
       }
     },
