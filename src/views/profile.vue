@@ -23,6 +23,7 @@
         <div class="position-relative px-4 pb-4">
           <PostCard
             v-for="post in posts"
+            :key="post.id"
             :id="post.id"
             :text="post.attributes.text"
             :likes="post.attributes.likes"
