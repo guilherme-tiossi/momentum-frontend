@@ -1,6 +1,6 @@
 <template>
-  <div class="card" :class="{ 'unreposted-padding': !reposted }">
-    <div v-if="reposted" class="card-tab">
+  <div class="card" :class="{ 'unreposted-padding': !reposted_internal }">
+    <div v-if="reposted_internal" class="card-tab">
       <span class="card-tab-text"> Reposted</span>
     </div>
     <div
@@ -21,20 +21,24 @@
           <span class="engagement-item">
             <i
               :class="[
-                liked_by_user ? 'bi bi-heart-fill liked' : 'bi bi-heart',
+                liked_by_user_internal
+                  ? 'bi bi-heart-fill liked'
+                  : 'bi bi-heart',
               ]"
+              @click="like"
             ></i>
-            {{ likes }}
+            {{ likes_internal }}
           </span>
           <span class="engagement-item">
             <i
               :class="
-                reposted_by_user
+                reposted_by_user_internal
                   ? 'bi bi-arrow-repeat reposted'
                   : 'bi bi-arrow-repeat'
               "
+              @click="repost"
             ></i>
-            {{ reposts }}
+            {{ reposts_internal }}
           </span>
           <span class="engagement-item">
             <i class="bi bi-chat"></i> {{ comments }}
@@ -49,9 +53,14 @@
 </template>
 
 <script>
+import api from "../api/http";
 export default {
   name: "PostCard",
   props: {
+    id: {
+      type: String,
+      default: "0",
+    },
     pfp: {
       type: String,
       default: "",
@@ -74,28 +83,92 @@ export default {
       default: "00/00/0000",
     },
     likes: {
-      type: String,
-      default: "12",
+      type: Number,
+      default: 0,
     },
     reposts: {
-      type: String,
-      default: "5",
+      type: Number,
+      default: 0,
     },
     comments: {
-      type: String,
-      default: "0",
+      type: Number,
+      default: 0,
     },
     reposted: {
       type: Boolean,
       default: false,
     },
     reposted_by_user: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 0,
     },
     liked_by_user: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 0,
+    },
+  },
+  data() {
+    return {
+      reposted_internal: this.reposted,
+      reposted_by_user_internal: this.reposted_by_user,
+      reposts_internal: this.reposts,
+      liked_internal: this.liked,
+      liked_by_user_internal: this.liked_by_user,
+      likes_internal: this.likes,
+    };
+  },
+  methods: {
+    async repost() {
+      if (!this.reposted_by_user) {
+        const data = {
+          data: {
+            type: "reposts",
+            relationships: {
+              post: {
+                data: {
+                  type: "posts",
+                  id: this.id,
+                },
+              },
+            },
+          },
+        };
+        try {
+          await api.post("/api/reposts", data);
+          this.reposted_internal = true;
+          this.reposted_by_user_internal = true;
+          this.reposts_internal += 1;
+          this.$emit("reposted");
+        } catch (error) {
+          console.error("Repost failed:", error);
+        }
+      }
+    },
+    async like() {
+      if (!this.liked_by_user) {
+        const data = {
+          data: {
+            type: "likes",
+            relationships: {
+              post: {
+                data: {
+                  type: "posts",
+                  id: this.id,
+                },
+              },
+            },
+          },
+        };
+        try {
+          await api.post("/api/likes", data);
+          this.liked_internal = true;
+          this.liked_by_user_internal = true;
+          this.likes_internal += 1;
+          this.$emit("liked");
+        } catch (error) {
+          console.error("Like failed:", error);
+        }
+      }
     },
   },
 };
@@ -211,6 +284,7 @@ export default {
 
 .engagement-item i {
   font-size: 1.2em;
+  cursor: pointer;
 }
 
 .engagement-item i.bi-arrow-repeat {
