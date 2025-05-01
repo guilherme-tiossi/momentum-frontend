@@ -1,7 +1,11 @@
 <template>
   <div class="container-fluid g-0 d-flex vh-100">
     <div class="d-flex flex-row w-100">
-      <SidebarLeft />
+      <SidebarLeft
+        :id="authStore.user.id"
+        :name="authStore.user.name"
+        :username="authStore.user.username"
+      />
 
       <div class="flex-grow-1 overflow-auto main-content">
         <CreatePostModal
