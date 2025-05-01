@@ -28,6 +28,7 @@
             :text="post.attributes.text"
             :likes="post.attributes.likes"
             :reposts="post.attributes.reposts"
+            :comments="post.attributes.comments"
             :created_at="formatDate(post.attributes.created_at)"
             :name="post.user.name"
             :username="post.user.username"
