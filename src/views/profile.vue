@@ -29,17 +29,18 @@
             v-for="post in posts"
             :key="post.id"
             :id="post.id"
-            :text="post.attributes.text"
-            :likes="post.attributes.likes"
-            :reposts="post.attributes.reposts"
-            :comments="post.attributes.comments"
-            :created_at="formatDate(post.attributes.created_at)"
+            :text="post.text"
+            :likes_counter="post.likes_counter"
+            :reposts_counter="post.reposts_counter"
+            :comments_counter="post.comments_counter"
+            :created_at="formatDate(post.created_at)"
             :name="post.user.name"
             :username="post.user.username"
             :pfp="post.user.pfp"
-            :reposted="post.attributes.reposted"
-            :liked_by_user="post.attributes.liked_by_user"
-            :reposted_by_user="post.attributes.reposted_by_user"
+            :reposted="post.reposted"
+            :liked_by_user="post.liked_by_user"
+            :reposted_by_user="post.reposted_by_user"
+            :comments="post.comments"
           />
         </div>
       </div>
@@ -60,6 +61,7 @@ import api from "../api/http";
 import { ref, onMounted } from "vue";
 import { getAuthStore } from "../stores/auth";
 import PostCard from "../components/PostCard.vue";
+import JSONAPISerializer from "json-api-serializer";
 import ProfileData from "../components/ProfileData.vue";
 import SidebarLeft from "../components/SidebarLeft.vue";
 import CreateButton from "../components/CreateButton.vue";
@@ -75,40 +77,38 @@ const isCreatingPost = ref(false);
 const isCreatingTask = ref(false);
 // const isCreatingRecurrentTask = ref(false);
 
+const Serializer = new JSONAPISerializer();
+
+Serializer.register("posts", {
+  relationships: {
+    comments: {
+      type: "comments",
+    },
+    author: {
+      type: "users",
+    },
+  },
+});
+
+Serializer.register("comments", {
+  relationships: {
+    author: {
+      type: "users",
+    },
+  },
+});
+
+Serializer.register("users");
+Serializer.register("attachment");
+Serializer.register("post");
+
 const loadPosts = async () => {
   try {
-    const { data } = await api.get(
+    const results = await api.get(
       "/api/users/" + authStore.user.id + "/profile_posts"
     );
 
-    const postsData = data.data;
-    const included = data.included;
-
-    const usersMap = {};
-    const pfpPath = (user) =>
-      user.attributes.uses_default_pfp
-        ? "/default/pfp.png"
-        : "/storage/avatars/" + user.attributes.pfp;
-
-    included.forEach((item) => {
-      if (item.type === "users") {
-        usersMap[item.id] = {
-          name: item.attributes.name,
-          username: item.attributes.username,
-          pfp: pfpPath(item),
-        };
-      }
-    });
-
-    posts.value = postsData.map((post) => {
-      const userId = post.relationships.user.data.id;
-      const userInfo = usersMap[userId] || {};
-
-      return {
-        ...post,
-        user: userInfo,
-      };
-    });
+    posts.value = Serializer.deserialize("post", results.data);
   } catch (error) {
     console.error("Error loading posts:", error);
   }

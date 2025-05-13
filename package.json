@@ -11,6 +11,8 @@
   "dependencies": {
     "axios": "^1.8.4",
     "bootstrap": "^5.3.3",
+    "json-api-normalizer": "^1.0.4",
+    "json-api-serializer": "^2.6.6",
     "pinia": "^3.0.1",
     "sass": "^1.86.1",
     "vue": "^3.5.13",

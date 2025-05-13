@@ -27,7 +27,7 @@
               ]"
               @click="like"
             ></i>
-            {{ likes_internal }}
+            {{ likes_counter_internal }}
           </span>
           <span class="engagement-item">
             <i
@@ -38,16 +38,20 @@
               "
               @click="repost"
             ></i>
-            {{ reposts_internal }}
+            {{ reposts_counter_internal }}
           </span>
           <span class="engagement-item">
-            <i class="bi bi-chat"></i> {{ comments }}
+            <i class="bi bi-chat"></i> {{ comments_counter }}
           </span>
         </div>
       </div>
     </div>
     <div class="card-content">
-      <slot></slot>
+      <template v-if="comments">
+        <div class="comment" v-for="(comment, key) in comments" :key="key">
+          <p>{{ comment.text }}</p>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -82,15 +86,15 @@ export default {
       type: String,
       default: "00/00/0000",
     },
-    likes: {
+    likes_counter: {
       type: Number,
       default: 0,
     },
-    reposts: {
+    reposts_counter: {
       type: Number,
       default: 0,
     },
-    comments: {
+    comments_counter: {
       type: Number,
       default: 0,
     },
@@ -106,15 +110,19 @@ export default {
       type: Number,
       default: 0,
     },
+    comments: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
       reposted_internal: this.reposted,
       reposted_by_user_internal: this.reposted_by_user,
-      reposts_internal: this.reposts,
-      liked_internal: this.liked,
+      reposts_counter_internal: this.reposts_counter,
       liked_by_user_internal: this.liked_by_user,
-      likes_internal: this.likes,
+      likes_counter_internal: this.likes_counter,
+      comments_counter_internal: this.comments_counter,
     };
   },
   methods: {
@@ -137,7 +145,7 @@ export default {
           await api.post("/api/reposts", data);
           this.reposted_internal = true;
           this.reposted_by_user_internal = true;
-          this.reposts_internal += 1;
+          this.reposts_commentinternal += 1;
           this.$emit("reposted");
         } catch (error) {
           console.error("Repost failed:", error);
@@ -147,7 +155,7 @@ export default {
           await api.patch("/api/depost", { post: this.id });
           this.reposted_internal = false;
           this.reposted_by_user_internal = false;
-          this.reposts_internal -= 1;
+          this.reposts_counter_internal -= 1;
           this.$emit("deposted");
         } catch (error) {
           console.error("Depost failed:", error);
@@ -171,9 +179,8 @@ export default {
         };
         try {
           await api.post("/api/likes", data);
-          this.liked_internal = true;
           this.liked_by_user_internal = true;
-          this.likes_internal += 1;
+          this.likes_counter_internal += 1;
           this.$emit("liked");
         } catch (error) {
           console.error("Like failed:", error);
@@ -181,9 +188,8 @@ export default {
       } else {
         try {
           await api.patch("/api/unlike", { post: this.id });
-          this.liked_internal = false;
           this.liked_by_user_internal = false;
-          this.likes_internal -= 1;
+          this.likes_counter_internal -= 1;
           this.$emit("unliked");
         } catch (error) {
           console.error("Unliked failed:", error);
@@ -323,5 +329,18 @@ export default {
 .reposted {
   color: rgb(29, 145, 166);
   text-shadow: 0 0 100px #000;
+}
+
+.comment {
+  margin-top: 25px;
+  left: 35px;
+  background: #eeeeee;
+  width: 840px;
+  border-radius: 12px 12px 15px 25px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to top, #e5e5e5, #eeeeee);
 }
 </style>
