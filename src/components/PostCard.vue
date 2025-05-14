@@ -46,10 +46,21 @@
         </div>
       </div>
     </div>
-    <div class="card-content">
+    <div>
       <template v-if="comments">
-        <div class="comment" v-for="(comment, key) in comments" :key="key">
-          <p>{{ comment.text }}</p>
+        <div v-for="(comment, key) in comments" :key="key">
+          <CommentCard
+            :key="comment.id"
+            :id="comment.id"
+            :text="comment.text"
+            :likes_counter="comment.likes_counter"
+            :created_at="formatDate(comment.created_at)"
+            :name="comment.user.name"
+            :username="comment.user.username"
+            :pfp="comment.user.pfp"
+            :reposted="comment.reposted"
+            :liked_by_user="comment.liked_by_user"
+          />
         </div>
       </template>
     </div>
@@ -58,8 +69,13 @@
 
 <script>
 import api from "../api/http";
+import CommentCard from "./CommentCard.vue";
+
 export default {
   name: "PostCard",
+  components: {
+    CommentCard,
+  },
   props: {
     id: {
       type: String,
@@ -126,6 +142,9 @@ export default {
     };
   },
   methods: {
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString();
+    },
     async repost() {
       if (!this.reposted_by_user_internal) {
         const data = {
@@ -212,6 +231,7 @@ export default {
   display: flex;
   flex-direction: column;
   background: linear-gradient(to top, #e5e5e5, #eeeeee);
+  padding-bottom: 10px;
 }
 
 .reposted-padding {
@@ -329,18 +349,5 @@ export default {
 .reposted {
   color: rgb(29, 145, 166);
   text-shadow: 0 0 100px #000;
-}
-
-.comment {
-  margin-top: 25px;
-  left: 35px;
-  background: #eeeeee;
-  width: 840px;
-  border-radius: 12px 12px 15px 25px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(to top, #e5e5e5, #eeeeee);
 }
 </style>
