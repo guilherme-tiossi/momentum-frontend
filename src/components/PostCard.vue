@@ -164,7 +164,7 @@ export default {
           await api.post("/api/reposts", data);
           this.reposted_internal = true;
           this.reposted_by_user_internal = true;
-          this.reposts_commentinternal += 1;
+          this.reposts_counter_internal += 1;
           this.$emit("reposted");
         } catch (error) {
           console.error("Repost failed:", error);
