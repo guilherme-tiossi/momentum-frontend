@@ -94,7 +94,7 @@ export default {
           },
         };
         try {
-          await api.post("/api/likes", data);
+          await api.post("/api/comment_likes", data);
           this.liked_by_user_internal = true;
           this.likes_counter_internal += 1;
           this.$emit("liked");
@@ -103,7 +103,7 @@ export default {
         }
       } else {
         try {
-          await api.patch("/api/unlike", { comment: this.id });
+          await api.patch("/api/unlike_comment", { comment: this.id });
           this.liked_by_user_internal = false;
           this.likes_counter_internal -= 1;
           this.$emit("unliked");
