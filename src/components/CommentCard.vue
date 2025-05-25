@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="comment-card">
     <div class="comment-info-container d-flex px-4">
       <div class="profile-avatar me-3 mt-2"></div>
       <div class="d-flex flex-column justify-content-center mt-2">
@@ -117,11 +117,11 @@ export default {
 </script>
 
 <style scoped>
-.card {
+.comment-card {
   margin-top: 25px;
   padding-top: 15px;
   padding-bottom: 10px;
-  max-width: 640px;
+  max-width: 540px;
   border-radius: 12px 12px 12px 12px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   overflow: hidden;

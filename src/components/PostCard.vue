@@ -41,41 +41,47 @@
             {{ reposts_counter_internal }}
           </span>
           <span class="engagement-item">
-            <i class="bi bi-chat"></i> {{ comments_counter_internal }}
+            <i class="bi bi-chat" @click="toggle_comments"></i>
+            {{ comments_counter_internal }}
           </span>
         </div>
       </div>
     </div>
-    <div>
-      <div class="d-flex justify-content-center mt-2">
-        <div class="comment-card">
-          <textarea
-            class="custom-textarea align-self-center"
-            placeholder="Join the conversation!"
-            v-model="comment_text"
-          ></textarea>
-          <button class="btn w-100 mb-2 custom-button" @click="comment">
-            Post
-          </button>
+    <div v-if="open_comments">
+      <div class="custom-hr mb-3"></div>
+      <div>
+        <div class="d-flex justify-content-center mt-1">
+          <div class="comment-card">
+            <textarea
+              class="custom-textarea align-self-center"
+              placeholder="Join the conversation!"
+              v-model="comment_text"
+            ></textarea>
+            <button class="btn w-100 mb-2 custom-button" @click="comment">
+              Post
+            </button>
+          </div>
         </div>
-      </div>
 
-      <template v-if="serializedComments">
-        <div v-for="(comment, key) in serializedComments" :key="key">
-          <CommentCard
-            :key="comment.id"
-            :id="comment.id"
-            :text="comment.text"
-            :likes_counter="comment.likes_counter"
-            :created_at="formatDate(comment.created_at)"
-            :name="comment.user.name"
-            :username="comment.user.username"
-            :pfp="comment.user.pfp"
-            :reposted="comment.reposted"
-            :liked_by_user="comment.liked_by_user"
-          />
-        </div>
-      </template>
+        <template v-if="serializedComments">
+          <div v-for="(comment, key) in serializedComments" :key="key">
+            <div class="d-flex justify-content-center mt-2">
+              <CommentCard
+                :key="comment.id"
+                :id="comment.id"
+                :text="comment.text"
+                :likes_counter="comment.likes_counter"
+                :created_at="formatDate(comment.created_at)"
+                :name="comment.user.name"
+                :username="comment.user.username"
+                :pfp="comment.user.pfp"
+                :reposted="comment.reposted"
+                :liked_by_user="comment.liked_by_user"
+              />
+            </div>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -181,11 +187,15 @@ export default {
       comments_counter_internal: this.comments_counter,
       comment_text: this.comment_text,
       serializedComments: this.comments,
+      open_comments: false,
     };
   },
   methods: {
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString();
+    },
+    toggle_comments() {
+      this.open_comments = !this.open_comments;
     },
     async repost() {
       if (!this.reposted_by_user_internal) {
@@ -294,9 +304,18 @@ export default {
 </script>
 
 <style scoped>
+.custom-hr {
+  margin-top: 30px;
+  height: 1px;
+  background: #d5d5d5;
+  width: 200%;
+  opacity: 1;
+  box-shadow: 0 2px 9px rgba(157, 157, 157, 0.2),
+    0 -2px 9px rgba(157, 157, 157, 0.2);
+}
+
 .card {
   margin-top: 25px;
-  left: 35px;
   background: #eeeeee;
   width: 840px;
   border-radius: 12px 12px 15px 25px;
@@ -305,7 +324,7 @@ export default {
   display: flex;
   flex-direction: column;
   background: linear-gradient(to top, #e5e5e5, #eeeeee);
-  padding-bottom: 10px;
+  padding-bottom: 30px;
 }
 
 .reposted-padding {
@@ -426,7 +445,6 @@ export default {
 }
 
 .comment-card {
-  margin-bottom: 15px;
   margin-top: 15px;
   max-width: 75%;
   left: 35px;

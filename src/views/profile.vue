@@ -24,24 +24,26 @@
         />
         <ProfileData />
 
-        <div class="position-relative px-4 pb-4">
-          <PostCard
-            v-for="post in posts"
-            :key="post.id"
-            :id="post.id"
-            :text="post.text"
-            :likes_counter="post.likes_counter"
-            :reposts_counter="post.reposts_counter"
-            :comments_counter="post.comments_counter"
-            :created_at="formatDate(post.created_at)"
-            :name="post.user.name"
-            :username="post.user.username"
-            :pfp="post.user.pfp"
-            :reposted="post.reposted"
-            :liked_by_user="post.liked_by_user"
-            :reposted_by_user="post.reposted_by_user"
-            :comments="post.comments"
-          />
+        <div class="d-flex align-items-center justify-content-center gap-2">
+          <div class="position-relative px-4 pb-4">
+            <PostCard
+              v-for="post in posts"
+              :key="post.id"
+              :id="post.id"
+              :text="post.text"
+              :likes_counter="post.likes_counter"
+              :reposts_counter="post.reposts_counter"
+              :comments_counter="post.comments_counter"
+              :created_at="formatDate(post.created_at)"
+              :name="post.user.name"
+              :username="post.user.username"
+              :pfp="post.user.pfp"
+              :reposted="post.reposted"
+              :liked_by_user="post.liked_by_user"
+              :reposted_by_user="post.reposted_by_user"
+              :comments="post.comments"
+            />
+          </div>
         </div>
       </div>
 
