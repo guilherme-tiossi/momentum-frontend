@@ -41,14 +41,27 @@
             {{ reposts_counter_internal }}
           </span>
           <span class="engagement-item">
-            <i class="bi bi-chat"></i> {{ comments_counter }}
+            <i class="bi bi-chat"></i> {{ comments_counter_internal }}
           </span>
         </div>
       </div>
     </div>
     <div>
-      <template v-if="comments">
-        <div v-for="(comment, key) in comments" :key="key">
+      <div class="d-flex justify-content-center mt-2">
+        <div class="comment-card">
+          <textarea
+            class="custom-textarea align-self-center"
+            placeholder="Join the conversation!"
+            v-model="comment_text"
+          ></textarea>
+          <button class="btn w-100 mb-2 custom-button" @click="comment">
+            Post
+          </button>
+        </div>
+      </div>
+
+      <template v-if="serializedComments">
+        <div v-for="(comment, key) in serializedComments" :key="key">
           <CommentCard
             :key="comment.id"
             :id="comment.id"
@@ -70,6 +83,33 @@
 <script>
 import api from "../api/http";
 import CommentCard from "./CommentCard.vue";
+import JSONAPISerializer from "json-api-serializer";
+
+const Serializer = new JSONAPISerializer();
+
+Serializer.register("posts", {
+  relationships: {
+    comments: {
+      type: "comments",
+    },
+    user: {
+      type: "users",
+    },
+  },
+});
+
+Serializer.register("comments", {
+  relationships: {
+    user: {
+      type: "users",
+    },
+  },
+});
+
+Serializer.register("post");
+Serializer.register("attachments");
+Serializer.register("attachment");
+Serializer.register("users");
 
 export default {
   name: "PostCard",
@@ -139,6 +179,8 @@ export default {
       liked_by_user_internal: this.liked_by_user,
       likes_counter_internal: this.likes_counter,
       comments_counter_internal: this.comments_counter,
+      comment_text: this.comment_text,
+      serializedComments: this.comments,
     };
   },
   methods: {
@@ -213,6 +255,38 @@ export default {
         } catch (error) {
           console.error("Unliked failed:", error);
         }
+      }
+    },
+    async comment() {
+      const data = {
+        data: {
+          type: "comments",
+          attributes: {
+            text: this.comment_text,
+          },
+          relationships: {
+            post: {
+              data: {
+                type: "posts",
+                id: this.id,
+              },
+            },
+          },
+        },
+      };
+      try {
+        await api.post("api/comments", data);
+        this.comment_text = "";
+
+        const response = await api.get(`/api/posts/${this.id}`);
+        const deserializedData = Serializer.deserialize("post", response.data);
+
+        this.comments_counter_internal += 1;
+        this.serializedComments = deserializedData.comments;
+
+        this.$emit("commented");
+      } catch (error) {
+        console.error("Comment failed:", error);
       }
     },
   },
@@ -349,5 +423,55 @@ export default {
 .reposted {
   color: rgb(29, 145, 166);
   text-shadow: 0 0 100px #000;
+}
+
+.comment-card {
+  margin-bottom: 15px;
+  margin-top: 15px;
+  max-width: 75%;
+  left: 35px;
+  background: #eeeeee;
+  width: 540px;
+  border-radius: 12px 12px 15px 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to top, #dadada, #eeeeee);
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.custom-button {
+  margin-top: 10px;
+  background: linear-gradient(to top, #b2b2b2, #bdbdbd);
+  border: none;
+  border-radius: 10px;
+  height: 40px;
+  max-width: 110px;
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+  color: black;
+  margin-left: 410px;
+}
+
+.custom-button:hover {
+  background: linear-gradient(to top, #a7a7a7, #b3b3b3);
+}
+
+.custom-textarea {
+  background-color: #ececec !important;
+  border: 2px solid !important;
+  border-color: #bdbdbd !important;
+  border-radius: 10px !important;
+  height: 50px;
+  width: 500px;
+  font-family: "Inter", sans-serif;
+  resize: none;
+  padding-top: 10px;
+}
+
+.custom-textarea::placeholder {
+  color: #676767;
 }
 </style>

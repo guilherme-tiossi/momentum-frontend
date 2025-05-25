@@ -32,7 +32,7 @@
             </div>
 
             <button class="btn w-100 mb-2 custom-button" @click="create">
-              Save
+              Post
             </button>
           </div>
         </div>
