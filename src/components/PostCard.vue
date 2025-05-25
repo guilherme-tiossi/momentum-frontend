@@ -194,8 +194,26 @@ export default {
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString();
     },
-    toggle_comments() {
-      this.open_comments = !this.open_comments;
+    async toggle_comments() {
+      if (this.open_comments) {
+        this.open_comments = false;
+      } else {
+        try {
+          const response = await api.get("api/comments", {
+            params: {
+              post: this.id,
+            },
+          });
+          const deserializedData = Serializer.deserialize(
+            "comments",
+            response.data
+          );
+          this.serializedComments = deserializedData;
+        } catch (error) {
+          console.error("Comment loading failed:", error);
+        }
+        this.open_comments = true;
+      }
     },
     async repost() {
       if (!this.reposted_by_user_internal) {
