@@ -46,6 +46,24 @@
               v-model="bio"
             ></textarea>
 
+            <div class="row justify-content-center mb-3">
+              <div class="col-8 text-center">
+                <input
+                  ref="fileInput"
+                  type="file"
+                  accept="image/*"
+                  style="display: none"
+                  @change="handleFileUpload"
+                />
+                <button
+                  class="btn w-100 custom-button"
+                  @click="triggerFileInput"
+                >
+                  {{ image?.name || "Upload Profile Picture" }}
+                </button>
+              </div>
+            </div>
+
             <button class="btn w-100 mb-2 custom-button" @click="edit">
               Save
             </button>
@@ -70,6 +88,8 @@ const username = ref("");
 const email = ref("");
 const location = ref("");
 const bio = ref("");
+const image = ref(null);
+const fileInput = ref(null);
 
 name.value = authStore.user.name;
 username.value = authStore.user.username;
@@ -77,27 +97,42 @@ email.value = authStore.user.email;
 location.value = authStore.user.location;
 bio.value = authStore.user.bio;
 
+const triggerFileInput = () => {
+  fileInput.value?.click();
+};
+
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    image.value = file;
+  }
+};
+
 const edit = async () => {
-  const attributes = {
-    name: name.value,
-    username: username.value,
-    email: email.value,
-  };
+  const formData = new FormData();
 
-  if (bio.value) attributes.bio = bio.value;
-  if (location.value) attributes.location = location.value;
+  formData.append("data[type]", "users");
+  formData.append("data[attributes][name]", name.value);
+  formData.append("data[attributes][username]", username.value);
+  formData.append("data[attributes][email]", email.value);
 
-  const userData = {
-    data: {
-      type: "users",
-      attributes,
-    },
-  };
+  if (image.value) formData.append("data[attributes][pfp]", image.value);
+  if (bio.value) formData.append("data[attributes][bio]", bio.value);
+  if (location.value)
+    formData.append("data[attributes][location]", location.value);
 
   const userId = authStore.user.id;
 
   try {
-    const response = await api.patch("/api/users/" + userId, userData);
+    const response = await api.post(
+      "/api/users/" + userId + "?_method=PATCH",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     authStore.user = response.data.data.attributes;
     authStore.user.id = userId;
     emit("close");
