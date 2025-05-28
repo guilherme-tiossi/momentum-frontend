@@ -7,7 +7,9 @@
       class="post-info-container d-flex px-4"
       :class="{ 'reposted-padding': reposted }"
     >
-      <div class="profile-avatar me-3 mt-2"></div>
+      <div class="profile-avatar me-3 mt-2">
+        <img :src="pfp" alt="" />
+      </div>
       <div class="d-flex flex-column justify-content-center mt-2">
         <div class="identity-row mb-1">
           <span class="name">{{ name }}</span>
@@ -390,6 +392,14 @@ export default {
   background: #c7c7c7;
   border-radius: 8px;
   flex-shrink: 0;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
 }
 
 .identity-row {

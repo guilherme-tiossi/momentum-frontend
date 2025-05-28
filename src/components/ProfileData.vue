@@ -3,7 +3,9 @@
 
   <div class="profile-cover w-100"></div>
   <div class="position-relative px-4">
-    <div class="profile-avatar"></div>
+    <div class="profile-avatar">
+      <img :src="authStore.user.pfp" alt="" />
+    </div>
     <div class="profile-buttons d-flex flex-row gap-2 justify-content-end">
       <button class="custom-button" @click="isEditing = true">
         Edit profile
@@ -103,6 +105,23 @@
   background: #c7c7c7;
   border-radius: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+}
+
+.profile-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
 
 .profile-buttons {

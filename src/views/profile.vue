@@ -5,6 +5,7 @@
         :id="authStore.user.id"
         :name="authStore.user.name"
         :username="authStore.user.username"
+        :pfp="authStore.user.pfp"
       />
 
       <div class="flex-grow-1 overflow-auto main-content">

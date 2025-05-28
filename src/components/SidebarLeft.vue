@@ -23,7 +23,9 @@
     </div>
     <div style="height: 175px"></div>
     <div class="sidebar-card rounded overflow-hidden d-flex align-items-center">
-      <div class="custom-img-2 rounded me-2 flex-shrink-0"></div>
+      <div class="custom-img-2 rounded me-2 flex-shrink-0">
+        <img :src="pfp" alt="" />
+      </div>
       <div class="d-flex flex-column justify-content-center overflow-hidden">
         <div class="sidebar-name text-truncate">{{ name }}</div>
         <div class="sidebar-username text-muted text-truncate">
@@ -59,6 +61,15 @@
   width: 55px;
   height: 55px;
   background: #c9c9c9;
+  border-radius: 8px;
+}
+
+.custom-img-2 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
 }
 
 .sidebar-card {
@@ -95,6 +106,10 @@ export default {
       default: "",
     },
     username: {
+      type: String,
+      default: "",
+    },
+    pfp: {
       type: String,
       default: "",
     },
