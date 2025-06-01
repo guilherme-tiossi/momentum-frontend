@@ -85,7 +85,7 @@
   margin-top: 30px;
   height: 1px;
   background: #d5d5d5;
-  width: 200%;
+  width: 100%;
   opacity: 1;
   box-shadow: 0 2px 9px rgba(157, 157, 157, 0.2),
     0 -2px 9px rgba(157, 157, 157, 0.2);

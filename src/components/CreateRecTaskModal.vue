@@ -5,7 +5,7 @@
         <div class="close-button-wrapper">
           <button class="close-button" @click="$emit('close')">x</button>
         </div>
-        <h4>New Task</h4>
+        <h4>New Recurrent Task</h4>
         <div class="row g-0">
           <div class="col-md-12 d-flex flex-column justify-content-center p-4">
             <div class="row">
@@ -18,16 +18,20 @@
                 />
               </div>
               <div class="col-md-6">
-                <input
-                  type="text"
-                  class="form-control mb-3 custom-input"
-                  placeholder="MM/DD/YYYY"
-                  v-model="date"
-                  @input="onDateInput"
-                  @keydown="onDateKeyDown"
-                  maxlength="10"
+                <CustomSelect
+                  class="mb-3"
+                  v-model="recurrencyType"
+                  :options="[
+                    { value: 'daily', label: 'Daily' },
+                    { value: 'weekly', label: 'Weekly' },
+                    { value: 'custom', label: 'Custom' },
+                  ]"
                 />
               </div>
+            </div>
+
+            <div v-if="recurrencyType === 'custom'" class="mb-3">
+              <DaySelector v-model="selectedDays" />
             </div>
 
             <input
@@ -49,7 +53,8 @@
 
 <script setup>
 import api from "../api/http";
-import { nextTick } from "vue";
+import DaySelector from "./DaySelector.vue";
+import CustomSelect from "./CustomSelect.vue";
 import { defineProps, defineEmits, ref } from "vue";
 
 const props = defineProps({ show: Boolean });
@@ -57,103 +62,58 @@ const emit = defineEmits(["close"]);
 
 const task = ref("");
 const description = ref("");
-const date = ref("");
+const recurrencyType = ref("daily");
+const selectedDays = ref([]);
 
-let _prevValue = "";
-let _prevCursor = 0;
+const daysOfWeekOptions = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 const handleClickOutside = () => {
   emit("close");
 };
 
-const isValidDate = (mm, dd, yyyy) => {
-  const month = parseInt(mm);
-  const day = parseInt(dd);
-  const year = parseInt(yyyy);
-
-  if (isNaN(month) || isNaN(day) || isNaN(year)) return false;
-  if (month < 1 || month > 12) return false;
-
-  const daysInMonth = new Date(year, month, 0).getDate();
-  return day >= 1 && day <= daysInMonth;
-};
-
 const create = async () => {
-  const parts = date.value.split("/");
-
-  if (parts.length !== 3) {
-    alert("Please enter the date in MM/DD/YYYY format.");
-    return;
-  }
-
-  const [mm, dd, yyyy] = parts;
-
-  if (!isValidDate(mm, dd, yyyy)) {
-    alert("Invalid date. Please check the values.");
-    return;
-  }
-
-  const formattedDate = `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
-
   const attributes = {
     title: task.value,
     description: description.value,
-    date: formattedDate,
+    recurrency_type: recurrencyType.value,
   };
+
+  if (recurrencyType.value === "custom") {
+    if (selectedDays.value.length === 0) {
+      alert("Please select at least one day for custom recurrency.");
+      return;
+    }
+    attributes.days_of_week = selectedDays.value.map(Number);
+  }
 
   const taskData = {
     data: {
-      type: "tasks",
+      type: "recurrent_tasks",
       attributes,
     },
   };
 
   try {
-    await api.post("/api/tasks", taskData);
-    emit("created_task");
+    await api.post("/api/recurrent_tasks", taskData);
+
+    selectedDays.value = [];
+    emit("created_rectask");
     emit("close");
     task.value = "";
     description.value = "";
-    date.value = "";
+    recurrencyType.value = "daily";
   } catch (error) {
-    console.error("Task failed:", error);
+    console.error("Task creation failed:", error);
     emit("close");
   }
-};
-
-const onDateKeyDown = (e) => {
-  _prevValue = date.value;
-  _prevCursor = e.target.selectionStart;
-};
-
-const onDateInput = (e) => {
-  const input = e.target;
-  const raw = input.value;
-  const cursor = input.selectionStart;
-  const type = e.inputType;
-
-  let val = raw.replace(/\D/g, "").slice(0, 8);
-
-  let formatted = "";
-  if (val.length >= 1) formatted += val.substring(0, 2);
-  if (val.length >= 3) formatted += "/" + val.substring(2, 4);
-  if (val.length >= 5) formatted += "/" + val.substring(4, 8);
-
-  date.value = formatted;
-
-  let newPos = cursor;
-  if (type === "deleteContentBackward") {
-    newPos = _prevCursor - 1;
-  } else {
-    const before = (_prevValue.slice(0, _prevCursor).match(/\//g) || []).length;
-    const after = (formatted.slice(0, newPos).match(/\//g) || []).length;
-    newPos = newPos + (after - before);
-  }
-
-  nextTick(() => {
-    newPos = Math.max(0, Math.min(formatted.length, newPos));
-    input.setSelectionRange(newPos, newPos);
-  });
 };
 
 const vClickOutside = {

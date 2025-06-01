@@ -14,6 +14,10 @@
           @close="isCreatingPost = false"
           @created_post="loadPosts"
         />
+        <CreateRecTaskModal
+          :show="isCreatingRecTask"
+          @close="isCreatingRecTask = false"
+        />
         <CreateTaskModal
           :show="isCreatingTask"
           @close="isCreatingTask = false"
@@ -22,6 +26,7 @@
         <CreateButton
           @open-post="isCreatingPost = true"
           @open-task="isCreatingTask = true"
+          @open-rectask="isCreatingRecTask = true"
         />
         <ProfileData />
 
@@ -71,6 +76,7 @@ import CreateButton from "../components/CreateButton.vue";
 import SidebarRight from "../components/SidebarRight.vue";
 import CreatePostModal from "../components/CreatePostModal.vue";
 import CreateTaskModal from "../components/CreateTaskModal.vue";
+import CreateRecTaskModal from "../components/CreateRecTaskModal.vue";
 
 const posts = ref([]);
 const authStore = getAuthStore();
@@ -78,7 +84,7 @@ const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString();
 
 const isCreatingPost = ref(false);
 const isCreatingTask = ref(false);
-// const isCreatingRecurrentTask = ref(false);
+const isCreatingRecTask = ref(false);
 
 const Serializer = new JSONAPISerializer();
 

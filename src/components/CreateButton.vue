@@ -12,7 +12,9 @@
       <div v-if="isOpen" class="fab-item" key="item2">
         <div class="fab-inner">
           <div class="label">New Recurrent Task</div>
-          <button class="button small-button">:o</button>
+          <button class="button small-button" @click="$emit('open-rectask')">
+            :o
+          </button>
         </div>
       </div>
       <div v-if="isOpen" class="fab-item" key="item3">
@@ -40,7 +42,7 @@ import { ref } from "vue";
 const isOpen = ref(false);
 
 const toggle = () => (isOpen.value = !isOpen.value);
-const emit = defineEmits(["open-post", "open-task"]);
+const emit = defineEmits(["open-post", "open-task", "open-rectask"]);
 
 const closeIfOpen = () => {
   if (isOpen.value) {
