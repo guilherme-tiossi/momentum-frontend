@@ -5,6 +5,13 @@
       <i class="bi bi-house-door me-2"></i>
       <p class="mb-0">Home</p>
     </div>
+    <div
+      class="mt-2 sidebar-link d-flex align-tems-center"
+      @click="$router.push('/tasks')"
+    >
+      <i class="bi bi-list-task me-2"></i>
+      <p class="mb-0">Tasks</p>
+    </div>
     <div class="mt-2 sidebar-link d-flex align-items-center">
       <i class="bi bi-bell me-2"></i>
       <p class="mb-0">Notifications</p>
@@ -13,7 +20,10 @@
       <i class="bi bi-chat-dots me-2"></i>
       <p class="mb-0">Messages</p>
     </div>
-    <div class="mt-2 sidebar-link d-flex align-items-center">
+    <div
+      class="mt-2 sidebar-link d-flex align-items-center"
+      @click="$router.push('/profile')"
+    >
       <i class="bi bi-person-fill me-2"></i>
       <p class="mb-0">Profile</p>
     </div>
@@ -49,6 +59,7 @@
   font-family: "Inter", sans-serif;
   font-size: 1.5rem;
   text-align: left;
+  cursor: pointer;
 }
 
 .custom-img {
